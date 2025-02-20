@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./config/db");
+const taskRoutes = require("./routes/taskRoutes");
 
 const authRoutes = require("./routes/authRoutes");
 
@@ -12,6 +13,8 @@ app.use(cors());
 
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/tareas", taskRoutes);
 
 app.get("/", (req, res) => {
   res.send("Servidor corriendo...");

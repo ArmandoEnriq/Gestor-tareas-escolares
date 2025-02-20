@@ -8,7 +8,7 @@ const router = express.Router();
 
 // REGISTRO DE USUARIO
 router.post("/register", async (req, res) => {
-  const { nombre, email, password } = req.body;
+  const { nombre, email, password, rol } = req.body;
 
   // Verificar si el usuario ya existe
   db.query("SELECT * FROM usuarios WHERE email = ?", [email], async (err, results) => {
@@ -21,8 +21,8 @@ router.post("/register", async (req, res) => {
 
     // Insertar el nuevo usuario en la BD
     db.query(
-      "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)",
-      [nombre, email, hashedPassword],
+      "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)",
+      [nombre, email, hashedPassword,rol],
       (err, result) => {
         if (err) return res.status(500).json({ error: "Error al registrar usuario" });
         res.json({ message: "Usuario registrado correctamente" });
