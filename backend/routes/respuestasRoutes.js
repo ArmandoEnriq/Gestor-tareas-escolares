@@ -55,4 +55,40 @@ router.get("/:tarea_id", verifyToken, (req, res) => {
   );
 });
 
+// CALIFICAR RESPUESTA (Solo para maestros)
+router.put("/calificar/:respuesta_id", verifyToken, (req, res) => {
+    if (req.user.rol !== "admin") {
+      return res.status(403).json({ error: "Acceso denegado" });
+    }
+  
+    const { respuesta_id } = req.params;
+    const { calificacion, comentario } = req.body;
+  
+    db.query(
+      "UPDATE respuestas SET calificacion = ?, comentario = ? WHERE id = ?",
+      [calificacion, comentario, respuesta_id],
+      (err, result) => {
+        if (err) return res.status(500).json({ error: "Error al calificar la respuesta" });
+        res.json({ message: "Respuesta calificada correctamente" });
+      }
+    );
+  });
+  
+  // OBTENER RESPUESTA CON CALIFICACIÓN
+  router.get("/detalle/:respuesta_id", verifyToken, (req, res) => {
+    const { respuesta_id } = req.params;
+  
+    db.query(
+      "SELECT r.id, u.nombre AS alumno, r.archivo, r.fecha_envio, r.calificacion, r.comentario FROM respuestas r JOIN usuarios u ON r.usuario_id = u.id WHERE r.id = ?",
+      [respuesta_id],
+      (err, results) => {
+        if (err) return res.status(500).json({ error: "Error al obtener la respuesta" });
+        if (results.length === 0) return res.status(404).json({ error: "Respuesta no encontrada" });
+  
+        res.json(results[0]);
+      }
+    );
+  });
+  
+
 module.exports = router;
