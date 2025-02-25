@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Tareas</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Gestión de Tareas</h1>
+        <nav>
+            <a href="dashboard.html">Volver al Dashboard</a>
+            <a href="#" id="logout">Cerrar Sesión</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Tareas Disponibles</h2>
+        
+        <!-- Sección solo para maestros -->
+        <div id="admin-section" style="display: none;">
+            <h3>Crear Nueva Tarea</h3>
+            <form id="taskForm">
+                <label for="titulo">Título:</label>
+                <input type="text" id="titulo" required>
+
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" required></textarea>
+                
+                <label for="fecha_limite">Fecha Límite:</label>
+                <input type="date" id="fecha_limite" required>
+
+                <button type="submit">Crear Tarea</button>
+            </form>
+        </div>
+
+        <!-- Listado de tareas -->
+        <div id="task-list"></div>
+    </main>
+
+    <script src="../js/tasks.js"></script>
+</body>
+</html>
