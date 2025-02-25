@@ -20,3 +20,8 @@ nav a {
 main {
     padding: 20px;
 }
+
+li{
+    list-style-type: none;
+    margin: 10px;
+}

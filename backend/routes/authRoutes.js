@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db");
+const verifyToken = require("../middlewares/authMiddleware");
 require("dotenv").config();
 
 const router = express.Router();
@@ -55,5 +56,14 @@ router.post("/login", (req, res) => {
     res.json({ message: "Login exitoso", token });
   });
 });
+
+// OBTENER USUARIO
+router.get("/me", verifyToken, (req, res) => {
+  db.query("SELECT id, nombre, email, rol FROM usuarios WHERE id = ?", [req.user.id], (err, results) => {
+      if (err) return res.status(500).json({ error: "Error en el servidor" });
+      res.json(results[0]);
+  });
+});
+
 
 module.exports = router;
