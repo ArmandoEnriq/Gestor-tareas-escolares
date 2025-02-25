@@ -18,9 +18,5 @@ app.use("/api/tareas", taskRoutes);
 
 app.use("/api/respuestas", respuestasRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Servidor corriendo...");
-});
-
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`));
