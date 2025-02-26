@@ -2,7 +2,6 @@ const express = require("express");
 const db = require("../config/db");
 const verifyToken = require("../middlewares/authMiddleware");
 const multer = require("multer");
-const path = require("path");
 
 const router = express.Router();
 
@@ -73,22 +72,28 @@ router.put("/calificar/:respuesta_id", verifyToken, (req, res) => {
       }
     );
   });
-  
-  // OBTENER RESPUESTA CON CALIFICACIÓN
-  router.get("/detalle/:respuesta_id", verifyToken, (req, res) => {
-    const { respuesta_id } = req.params;
-  
-    db.query(
-      "SELECT r.id, u.nombre AS alumno, r.archivo, r.fecha_envio, r.calificacion, r.comentario FROM respuestas r JOIN usuarios u ON r.usuario_id = u.id WHERE r.id = ?",
-      [respuesta_id],
+
+  // OBTENER CALIFICACIONES Y COMENTARIOS DEL ALUMNO
+router.get("/mis-respuestas", verifyToken, (req, res) => {
+  if (req.user.rol !== "usuario") {
+      return res.status(403).json({ error: "Acceso denegado" });
+  }
+
+  db.query(
+      `SELECT r.id, t.titulo, r.archivo, r.fecha_envio, r.calificacion, r.comentario
+       FROM respuestas r 
+       JOIN tareas t ON r.tarea_id = t.id 
+       WHERE r.usuario_id = ?`,
+      [req.user.id],
       (err, results) => {
-        if (err) return res.status(500).json({ error: "Error al obtener la respuesta" });
-        if (results.length === 0) return res.status(404).json({ error: "Respuesta no encontrada" });
-  
-        res.json(results[0]);
+          if (err) return res.status(500).json({ error: "Error al obtener calificaciones" });
+          res.json(results);
       }
-    );
-  });
-  
+  );
+});
+
+
+
+
 
 module.exports = router;
